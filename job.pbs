@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#SBATCH -p general
+#SBATCH -N 1
+#SBATCH --mem=32g
+#SBATCH -n 1
+#SBATCH -t 1-
+
+
+module add r/4.3.2
+cd /work/users/s/u/sunzehui/GSR/
+Rscript prs.R
