@@ -1,0 +1,11 @@
+name: prs_env
+channels:
+  - defaults
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base
+  - r-data.table
+  - r-prset
+  - r-ggplot2
+  - r-argparse

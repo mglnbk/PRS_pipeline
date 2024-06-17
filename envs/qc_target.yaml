@@ -1,0 +1,6 @@
+name: qc_target_env
+channels:
+  - defaults
+dependencies:
+  - plink
+  - python

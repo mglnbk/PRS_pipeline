@@ -1,0 +1,16 @@
+base:
+  samples: ["AN"]  # AN currently
+  input:
+    AN: "data/base/pgcAN2.2019-07.vcf.tsv"
+  output:
+    AN: "results/AN/base/QC/AN_GSR_BASE.QC.gz"
+
+target:
+  genotype:
+    bed: "data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bed"
+    bim: "data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bim"
+    fam: "data/target/genotype/ukb_imp_allchr_v3_40k_fmri.fam"
+  phenotype: "data/target/phenotype/phenotype.txt"
+  summary_statistics: "data/target/summary_stats/summary_statistics.txt"
+  qc_prefix_prefix: "results/{sample}/target/QC"
+  final_prefix_prefix: "results/{sample}/target/final"

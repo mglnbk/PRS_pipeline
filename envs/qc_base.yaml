@@ -1,0 +1,9 @@
+name: qc_base_env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - r-base
+  - r-data.table
+  - r-magrittr
+  - r-argparse

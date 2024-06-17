@@ -4,6 +4,7 @@ library(magrittr)
 an_gsr <- fread("./pgcAN2.2019-07.vcf.tsv")
 ptsd_gsr <- fread("./pts_eur_freeze2_overall.results")
 
+
 colnames(an_gsr)
 colnames(ptsd_gsr)
 
