@@ -1,0 +1,35 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	check_relatedness
+	1	check_sex
+	1	dedeuplicate
+	1	filter_het
+	1	filter_sex
+	1	generate_final_data
+	1	strand_flipping
+	8
+
+[Mon Jun 17 15:55:54 2024]
+rule strand_flipping:
+    input: results/AN/target/QC/target.QC.snplist, data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bim, results/AN/base/QC/AN_GSR_BASE.QC.gz
+    output: results/AN/target/QC/target.a1, results/AN/target/QC/target.mismatch
+    jobid: 1
+
+[Mon Jun 17 15:56:13 2024]
+Error in rule strand_flipping:
+    jobid: 1
+    output: results/AN/target/QC/target.a1, results/AN/target/QC/target.mismatch
+    shell:
+        
+        mkdir -p results/AN/target/QC && Rscript scripts/strand_flipping.R --bim data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bim --target results/AN/base/QC/AN_GSR_BASE.QC.gz --snp results/AN/target/QC/target.QC.snplist --output_a1 results/AN/target/QC/target.a1 --output_mismatch results/AN/target/QC/target.mismatch
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /work/users/s/u/sunzehui/PRS_pipeline/.snakemake/log/2024-06-17T155553.936008.snakemake.log

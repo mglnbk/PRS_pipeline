@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 12 of /work/users/s/u/sunzehui/PRS_pipeline/Snakefile:
+Missing input files for rule all:
+results/AN/target/QC/target.QC.valid

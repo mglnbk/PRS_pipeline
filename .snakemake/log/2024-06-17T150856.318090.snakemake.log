@@ -1,0 +1,35 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	check_relatedness
+	1	check_sex
+	1	dedeuplicate
+	1	filter_het
+	1	filter_sex
+	1	generate_final_data
+	1	qc_base
+	1	strand_flipping
+	9
+
+[Mon Jun 17 15:08:56 2024]
+rule qc_base:
+    input: data/base/pgcAN2.2019-07.vcf.tsv
+    output: results/AN/base/QC/AN_GSR_BASE.QC.gz
+    jobid: 1
+
+Terminating processes on user request, this might take some time.
+[Mon Jun 17 15:09:11 2024]
+Error in rule qc_base:
+    jobid: 1
+    output: results/AN/base/QC/AN_GSR_BASE.QC.gz
+    shell:
+        
+        module load r/4.3.2 && Rscript scripts/qc_base.R --input data/base/pgcAN2.2019-07.vcf.tsv --output results/AN/base/QC/AN_GSR_BASE.QC.gz --keys REF IMPINFO POS PVAL ID BETA ALT CHROM --values A1 INFO BP P SNP BETA A2 CHR
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Complete log: /work/users/s/u/sunzehui/PRS_pipeline/.snakemake/log/2024-06-17T150856.318090.snakemake.log

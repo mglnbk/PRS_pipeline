@@ -10,7 +10,28 @@ target:
     bed: "data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bed"
     bim: "data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bim"
     fam: "data/target/genotype/ukb_imp_allchr_v3_40k_fmri.fam"
+    prefix: "data/target/genotype/ukb_imp_allchr_v3_40k_fmri"
   phenotype: "data/target/phenotype/phenotype.txt"
-  summary_statistics: "data/target/summary_stats/summary_statistics.txt"
-  qc_prefix_prefix: "results/{sample}/target/QC"
-  final_prefix_prefix: "results/{sample}/target/final"
+  
+results:
+  AN:
+    qc_prefix_prefix: "results/AN/target/QC"
+    final_target_prefix: "results/AN/target/final"
+
+prs:
+  AN:
+    output_prefix: "results/AN/prs"
+
+
+mapping:
+  AN: 
+    CHROM: CHR
+    ID: SNP
+    POS: BP
+    REF: A1
+    ALT: A2
+    IMPINFO: INFO
+    PVAL: P
+    BETA: BETA
+    OR: "NA"
+    

@@ -1,0 +1,45 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	check_relatedness
+	1	check_sex
+	1	dedeuplicate
+	1	filter_het
+	1	filter_sex
+	1	generate_final_data
+	1	strand_flipping
+	8
+
+[Mon Jun 17 16:11:21 2024]
+rule strand_flipping:
+    input: results/AN/target/QC/target.QC.snplist, data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bim, results/AN/base/QC/AN_GSR_BASE.QC.gz
+    output: results/AN/target/QC/target.a1, results/AN/target/QC/target.mismatch
+    jobid: 1
+
+[Mon Jun 17 16:14:20 2024]
+Finished job 1.
+1 of 8 steps (12%) done
+
+[Mon Jun 17 16:14:20 2024]
+rule dedeuplicate:
+    input: results/AN/target/QC/target.QC.snplist
+    output: results/AN/target/QC/target.QC.nodup.snplist
+    jobid: 3
+
+[Mon Jun 17 16:14:20 2024]
+Error in rule dedeuplicate:
+    jobid: 3
+    output: results/AN/target/QC/target.QC.nodup.snplist
+    shell:
+        
+        Rscript scripts/dedeuplicate_snplist_rs_id.R results/AN/target/QC/target.QC.snplist results/AN/target/QC/target.QC.nodup.snplist
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /work/users/s/u/sunzehui/PRS_pipeline/.snakemake/log/2024-06-17T161121.633017.snakemake.log

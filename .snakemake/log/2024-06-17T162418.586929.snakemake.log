@@ -1,0 +1,32 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	check_relatedness
+	1	check_sex
+	1	filter_sex
+	1	generate_final_data
+	5
+
+[Mon Jun 17 16:24:18 2024]
+rule check_sex:
+    input: data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bed, results/AN/target/QC/target.valid.sample, results/AN/target/QC/target.QC.prune.in
+    output: results/AN/target/QC/target.QC.sexcheck
+    jobid: 8
+
+[Mon Jun 17 16:30:30 2024]
+Error in rule check_sex:
+    jobid: 8
+    output: results/AN/target/QC/target.QC.sexcheck
+    shell:
+        
+        /proj/htzhu/UKB_GWAS/phase1and2/plink           --bfile data/target/genotype/ukb_imp_allchr_v3_40k_fmri           --extract results/AN/target/QC/target.QC.prune.in           --keep results/AN/target/QC/target.valid.sample           --check-sex           --out results/AN/target/QC/target.QC
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /work/users/s/u/sunzehui/PRS_pipeline/.snakemake/log/2024-06-17T162418.586929.snakemake.log

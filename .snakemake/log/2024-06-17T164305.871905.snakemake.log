@@ -1,0 +1,17 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	check_relatedness
+	1	generate_final_data
+	3
+
+[Mon Jun 17 16:43:08 2024]
+rule check_relatedness:
+    input: results/AN/target/QC/target.valid.sample, data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bed, results/AN/target/QC/target.QC.prune.in
+    output: results/AN/target/QC/target.QC.rel.id
+    jobid: 7
+

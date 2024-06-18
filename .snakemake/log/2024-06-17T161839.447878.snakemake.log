@@ -1,0 +1,54 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	1	check_relatedness
+	1	check_sex
+	1	dedeuplicate
+	1	filter_het
+	1	filter_sex
+	1	generate_final_data
+	7
+
+[Mon Jun 17 16:18:42 2024]
+rule dedeuplicate:
+    input: results/AN/target/QC/target.QC.snplist
+    output: results/AN/target/QC/target.QC.nodup.snplist
+    jobid: 4
+
+[Mon Jun 17 16:19:13 2024]
+Finished job 4.
+1 of 7 steps (14%) done
+
+[Mon Jun 17 16:19:13 2024]
+rule filter_het:
+    input: results/AN/target/QC/target.QC.het
+    output: results/AN/target/QC/target.valid.sample
+    jobid: 5
+
+[Mon Jun 17 16:19:16 2024]
+Finished job 5.
+2 of 7 steps (29%) done
+
+[Mon Jun 17 16:19:16 2024]
+rule check_sex:
+    input: results/AN/target/QC/target.valid.sample, results/AN/target/QC/target.QC.prune.in, data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bed
+    output: results/AN/target/QC/target.QC.sexcheck
+    jobid: 10
+
+[Mon Jun 17 16:19:17 2024]
+Error in rule check_sex:
+    jobid: 10
+    output: results/AN/target/QC/target.QC.sexcheck
+    shell:
+        
+        /proj/htzhu/UKB_GWAS/phase1and2/plink           --bfile data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bed           --extract results/AN/target/QC/target.QC.prune.in           --keep results/AN/target/QC/target.valid.sample           --check-sex           --out results/AN/target/QC/target.QC
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /work/users/s/u/sunzehui/PRS_pipeline/.snakemake/log/2024-06-17T161839.447878.snakemake.log
