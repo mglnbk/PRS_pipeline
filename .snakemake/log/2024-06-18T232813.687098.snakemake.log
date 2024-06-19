@@ -1,0 +1,42 @@
+Building DAG of jobs...
+Error: Directory cannot be locked. This usually means that another Snakemake instance is running on this directory. Another possibility is that a previous run exited unexpectedly.
+Job counts:
+	count	jobs
+	1	all
+	1	check_relatedness
+	1	clumping
+	1	generate_PRS_step1
+	1	generate_PRS_step2
+	1	generate_final_data
+	1	update_effect_size
+	7
+
+[Tue Jun 18 23:28:14 2024]
+rule check_relatedness:
+    input: results/AN/target/QC/target.QC.prune.in, results/AN/target/QC/target.valid.sample, data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bed
+    output: results/AN/target/QC/target.QC.rel.id
+    jobid: 3
+
+
+[Tue Jun 18 23:28:14 2024]
+rule update_effect_size:
+    input: results/AN/base/QC/AN_GSR_BASE.QC.gz
+    output: results/AN/base/QC/target.QC.transformed
+    jobid: 6
+
+
+[Tue Jun 18 23:28:14 2024]
+rule generate_final_data:
+    input: results/AN/target/QC/target.QC.nodup.snplist, results/AN/target/QC/target.a1, results/AN/target/QC/target.mismatch, results/AN/target/QC/target.QC.rel.id, data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bed
+    output: results/AN/target/final/target.QC.bim, results/AN/target/final/target.QC.fam, results/AN/target/final/target.QC.bed
+    jobid: 1
+
+
+[Tue Jun 18 23:28:14 2024]
+rule generate_PRS_step1:
+    input: results/AN/base/QC/target.QC.transformed
+    output: results/AN/prs/range_list, results/AN/prs/SNP.pvalue
+    jobid: 8
+
+RuleException in line 275 of /work/users/s/u/sunzehui/PRS_pipeline/Snakefile:
+NameError: The name 'print $3,$8' is unknown in this context. Please make sure that you defined that variable. Also note that braces not used for variable access have to be escaped by repeating them, i.e. {{print $1}}

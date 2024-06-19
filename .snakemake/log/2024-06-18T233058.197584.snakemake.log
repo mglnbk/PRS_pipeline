@@ -1,0 +1,56 @@
+Building DAG of jobs...
+Error: Directory cannot be locked. This usually means that another Snakemake instance is running on this directory. Another possibility is that a previous run exited unexpectedly.
+Job counts:
+	count	jobs
+	1	all
+	1	check_relatedness
+	1	clumping
+	1	generate_PRS_step1
+	1	generate_PRS_step2
+	1	generate_final_data
+	1	update_effect_size
+	7
+
+[Tue Jun 18 23:30:58 2024]
+rule update_effect_size:
+    input: results/AN/base/QC/AN_GSR_BASE.QC.gz
+    output: results/AN/base/QC/target.QC.transformed
+    jobid: 3
+
+
+[Tue Jun 18 23:30:58 2024]
+rule check_relatedness:
+    input: data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bed, results/AN/target/QC/target.valid.sample, results/AN/target/QC/target.QC.prune.in
+    output: results/AN/target/QC/target.QC.rel.id
+    jobid: 8
+
+
+[Tue Jun 18 23:30:58 2024]
+rule generate_PRS_step1:
+    input: results/AN/base/QC/target.QC.transformed
+    output: results/AN/prs/SNP.pvalue, results/AN/prs/range_list
+    jobid: 4
+
+
+[Tue Jun 18 23:30:58 2024]
+rule generate_final_data:
+    input: data/target/genotype/ukb_imp_allchr_v3_40k_fmri.bed, results/AN/target/QC/target.mismatch, results/AN/target/QC/target.a1, results/AN/target/QC/target.QC.rel.id, results/AN/target/QC/target.QC.nodup.snplist
+    output: results/AN/target/final/target.QC.bed, results/AN/target/final/target.QC.fam, results/AN/target/final/target.QC.bim
+    jobid: 2
+
+
+[Tue Jun 18 23:30:58 2024]
+rule clumping:
+    input: results/AN/target/final/target.QC.bed, results/AN/base/QC/target.QC.transformed, results/AN/target/final/target.QC.fam, results/AN/target/final/target.QC.bim
+    output: results/AN/prs/prs.clumped, results/AN/prs/prs.valid.snp
+    jobid: 5
+
+
+[Tue Jun 18 23:30:58 2024]
+rule generate_PRS_step2:
+    input: results/AN/prs/SNP.pvalue, results/AN/prs/range_list, results/AN/target/final/target.QC.bed, results/AN/target/final/target.QC.fam, results/AN/base/QC/target.QC.transformed, results/AN/target/final/target.QC.bim, results/AN/prs/prs.valid.snp
+    output: results/AN/prs/prs.0.5.profile, results/AN/prs/prs.0.4.profile, results/AN/prs/prs.0.3.profile, results/AN/prs/prs.0.2.profile, results/AN/prs/prs.0.1.profile, results/AN/prs/prs.0.05.profile, results/AN/prs/prs.0.001.profile
+    jobid: 1
+
+RuleException in line 293 of /work/users/s/u/sunzehui/PRS_pipeline/Snakefile:
+'OutputFiles' object has no attribute 'output_prefix'

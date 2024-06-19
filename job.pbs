@@ -4,7 +4,7 @@
 #SBATCH -N 1
 #SBATCH --mem=64g
 #SBATCH -n 1
-#SBATCH -t 1-
+#SBATCH -t 2-
 
 source ~/work/bin/activate
 module add r/4.3.2
