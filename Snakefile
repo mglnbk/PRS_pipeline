@@ -11,17 +11,25 @@ _values=list(config["mapping"]["AN"].values())
 # Define the final target rule
 rule all:
     input:
-        expand("{output}", output=[config["base"]["output"][sample] for sample in BASE_SAMPLES]),
-        expand("results/{sample}/target/QC/target.QC.fam", sample=BASE_SAMPLES),
-        expand("results/{sample}/target/QC/target.QC.snplist", sample=BASE_SAMPLES),
-        expand("results/{sample}/target/QC/target.QC.nodup.snplist", sample=BASE_SAMPLES),
-        expand("results/{sample}/target/QC/target.valid.sample", sample=BASE_SAMPLES),
-        expand("results/{sample}/target/QC/target.a1", sample=BASE_SAMPLES),
-        expand("results/{sample}/target/QC/target.mismatch", sample=BASE_SAMPLES),
+        # expand("{output}", output=[config["base"]["output"][sample] for sample in BASE_SAMPLES]),
+        # expand("results/{sample}/target/QC/target.QC.fam", sample=BASE_SAMPLES),
+        # expand("results/{sample}/target/QC/target.QC.snplist", sample=BASE_SAMPLES),
+        # expand("results/{sample}/target/QC/target.QC.nodup.snplist", sample=BASE_SAMPLES),
+        # expand("results/{sample}/target/QC/target.valid.sample", sample=BASE_SAMPLES),
+        # expand("results/{sample}/target/QC/target.a1", sample=BASE_SAMPLES),
+        # expand("results/{sample}/target/QC/target.mismatch", sample=BASE_SAMPLES),
         # expand("results/{sample}/target/QC/target.QC.valid", sample=BASE_SAMPLES), # used in sexcheck
         config["results"]["AN"]["final_target_prefix"] + "/target.QC.bed",
         config["results"]["AN"]["final_target_prefix"] + "/target.QC.bim",
-        config["results"]["AN"]["final_target_prefix"] + "/target.QC.fam"
+        config["results"]["AN"]["final_target_prefix"] + "/target.QC.fam",
+        config["prs"]["AN"]["output_prefix"]+"/prs"+".0.5.profile",
+        config["prs"]["AN"]["output_prefix"]+"/prs"+".0.4.profile",
+        config["prs"]["AN"]["output_prefix"]+"/prs"+".0.3.profile",
+        config["prs"]["AN"]["output_prefix"]+"/prs"+".0.2.profile",
+        config["prs"]["AN"]["output_prefix"]+"/prs"+".0.1.profile",
+        config["prs"]["AN"]["output_prefix"]+"/prs"+".0.05.profile",
+        config["prs"]["AN"]["output_prefix"]+"/prs"+".0.001.profile"
+
 
 # Rule: Quality Control for base data using R
 rule qc_base:
@@ -224,18 +232,24 @@ rule update_effect_size:
         summary_statistic=config["base"]["output"]["AN"]
     output:
         "results/AN/base/QC/target.QC.transformed"
+
     shell:
+        # """
+        # Rscript scripts/update.R --input {input.summary_statistic} --output {output}
+        # """
+        # already preprocessed
         """
-        Rscript scripts/update.R --input {input.summary_statistic} --output {output}
+        mkdir -p results/AN/base/QC/ &&
+        cp {input.summary_statistic} {output}
         """
 
 # step 10 clumping
 
 rule clumping:
     input:
-        base="results/AN/base/QC/target.QC.transformed"
-        bed=config["results"]["AN"]["final_target_prefix"]+"/target.QC.bed"
-        bim=config["results"]["AN"]["final_target_prefix"]+"/target.QC.bim"
+        base="results/AN/base/QC/target.QC.transformed",
+        bed=config["results"]["AN"]["final_target_prefix"]+"/target.QC.bed",
+        bim=config["results"]["AN"]["final_target_prefix"]+"/target.QC.bim",
         fam=config["results"]["AN"]["final_target_prefix"]+"/target.QC.fam"
     output:
         clumped_output=config["prs"]["AN"]["output_prefix"]+"/prs.clumped",
@@ -244,18 +258,18 @@ rule clumping:
         input_prefix=config["results"]["AN"]["final_target_prefix"]+"/target.QC",
         output_prefix=config["prs"]["AN"]["output_prefix"]+"/prs"
     shell:
-    """
-      /proj/htzhu/UKB_GWAS/phase1and2/plink \
-      --bfile {params.input_prefix} \
-      --clump-p1 1 \
-      --clump-r2 0.1 \
-      --clump-kb 250 \
-      --clump {input.base} \
-      --clump-snp-field SNP \
-      --clump-field P \
-      --out {params.output_prefix} && \
-    awk 'NR!=1{print $3}' {output.clumped_output} > {output.valid_snp} 
-    """
+        """
+        /proj/htzhu/UKB_GWAS/phase1and2/plink \
+          --bfile {params.input_prefix} \
+          --clump-p1 1 \
+          --clump-r2 0.1 \
+          --clump-kb 250 \
+          --clump {input.base} \
+          --clump-snp-field SNP \
+          --clump-field P \
+          --out {params.output_prefix} && 
+        awk 'NR!=1{{print $3}}' {output.clumped_output} > {output.valid_snp} 
+        """
     
 # step 11 generate valid 
 rule generate_PRS_step1:
@@ -265,16 +279,16 @@ rule generate_PRS_step1:
         rangel=config["prs"]["AN"]["output_prefix"]+"/range_list",
         snp_value=config["prs"]["AN"]["output_prefix"]+"/SNP.pvalue"
     shell:
-    """
-    awk '{print $3,$8}' {input.base} > {output.snp_value} && # $3 and $8 correspond to SNPID and P
-    echo "0.001 0 0.001" > {output.rangel} &&
-    echo "0.05 0 0.05" >> {output.rangel} &&
-    echo "0.1 0 0.1" >> {output.rangel} &&
-    echo "0.2 0 0.2" >> {output.rangel} &&
-    echo "0.3 0 0.3" >> {output.rangel} &&
-    echo "0.4 0 0.4" >> {output.rangel} &&
-    echo "0.5 0 0.5" >> {output.rangel} &&
-    """
+        """
+        awk '{{print $3,$8}}' {input.base} > {output.snp_value} && # $3 and $8 correspond to SNPID and P
+        echo "0.001 0 0.001" > {output.rangel} &&
+        echo "0.05 0 0.05" >> {output.rangel} &&
+        echo "0.1 0 0.1" >> {output.rangel} &&
+        echo "0.2 0 0.2" >> {output.rangel} &&
+        echo "0.3 0 0.3" >> {output.rangel} &&
+        echo "0.4 0 0.4" >> {output.rangel} &&
+        echo "0.5 0 0.5" >> {output.rangel} &&
+        """
 
 rule generate_PRS_step2:
     input:
@@ -297,11 +311,38 @@ rule generate_PRS_step2:
         input_prefix=config["results"]["AN"]["final_target_prefix"]+"/target.QC",
         output_prefix=config["prs"]["AN"]["output_prefix"]+"/prs"
     shell:
-    """
-    /proj/htzhu/UKB_GWAS/phase1and2/plink \
-    --bfile {params.input_prefix} \
-    --score {input.base} 3 4 6 header \
-    --q-score-range {input.rangel} {input.snp_value} \
-    --extract {input.valid_snp} \
-    --out {output.output_prefix}
-    """
+        """
+        /proj/htzhu/UKB_GWAS/phase1and2/plink \
+        --bfile {params.input_prefix} \
+        --score {input.base} 3 4 6 header \
+        --q-score-range {input.rangel} {input.snp_value} \
+        --extract {input.valid_snp} \
+        --out {params.output_prefix}
+        """
+
+rule population_accounting:
+    input:
+        bed=config["results"]["AN"]["final_target_prefix"]+"/target.QC.bed",
+        bim=config["results"]["AN"]["final_target_prefix"]+"/target.QC.bim",
+        fam=config["results"]["AN"]["final_target_prefix"]+"/target.QC.fam"
+    output:
+        prune_in=config["prs"]["AN"]["output_prefix"]+"/prs.prune.in",
+        eigenvec=config["prs"]["AN"]["output_prefix"]+"/prs.eigenvec"
+    params:
+        input_prefix=config["results"]["AN"]["final_target_prefix"]+"/target.QC",
+        output_prefix=config["prs"]["AN"]["output_prefix"]+"/prs"
+    shell:
+        """
+        # First, we need to perform prunning
+        plink \
+        --bfile {params.input_prefix} \
+        --indep-pairwise 200 50 0.25 \
+        --out {params.output_prefix}
+        &&
+        # Then we calculate the first 6 PCs
+        plink \
+        --bfile EUR.QC \
+        --extract {output.prune_in} \
+        --pca 6 \
+        --out {params.output_prefix}
+        """

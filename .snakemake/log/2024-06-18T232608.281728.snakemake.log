@@ -1,0 +1,2 @@
+SyntaxError in line 261 of /work/users/s/u/sunzehui/PRS_pipeline/Snakefile:
+Command must be given as string after the shell keyword. (Snakefile, line 261)
